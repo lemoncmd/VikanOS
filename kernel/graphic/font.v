@@ -24,3 +24,8 @@ pub fn (config &FrameBufferConfig) write_ascii(x int, y int, c rune, color &Pixe
 	}
 }
 
+pub fn (config &FrameBufferConfig) write_string(x int, y int, s string, color &PixelColor) {
+	for i, c in s {
+		config.write_ascii(x + 8 * i, y, c, color)
+	}
+}

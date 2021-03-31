@@ -1,4 +1,5 @@
 import graphic
+import console
 
 type Color = graphic.PixelColor
 
@@ -18,14 +19,13 @@ fn kernel_main(frame_buffer_config &graphic.FrameBufferConfig) {
 			frame_buffer_config.write_pixel(x, y, Color{255, 255, 255})
 		}
 	}
-	for x in 0..50 {
-		frame_buffer_config.write_ascii(x * 8, 50, `A` + x, Color{0, 0, 0})
-	}
 	for x in 0..200 {
 		for y in 0..100 {
 			frame_buffer_config.write_pixel(100 + x, 100 + y, Color{0, 255, 0})
 		}
 	}
+	mut cons := console.new_console(frame_buffer_config, Color{0, 0, 0}, Color{255, 255, 255})
+	cons.put_string('hogeeehoge')
 	halt()
 	println('hoge')
 }
