@@ -24,7 +24,9 @@ struct MemoryMap {
 
 void main__kernel_main(struct FrameBufferConfig* frame_buffer_config, struct MemoryMap* memory_map);
 
-void KernelMain(struct FrameBufferConfig* frame_buffer_config,
+_Alignas(16) uint8_t kernel_main_stack[1024 * 1024];
+
+void KernelMainNewStack(struct FrameBufferConfig* frame_buffer_config,
     struct MemoryMap* memory_map) {
   main__kernel_main(frame_buffer_config, memory_map);
 }

@@ -1,5 +1,5 @@
 TARGET = kernel.elf
-OBJS = main.o entry.o newlib_support.o hankaku.o
+OBJS = main.o entry.o newlib_support.o hankaku.o asmfunc.o
 
 CFLAGS += -O2 -Wall -g --target=x86_64-elf -ffreestanding -mno-red-zone
 LDFLAGS += --entry KernelMain -z norelro --image-base 0x100000 --static
@@ -22,6 +22,9 @@ kernel.elf: $(OBJS) Makefile
 
 %.c: %.v Makefile
 				v -o $@ $<
+
+%.o: %.asm Makefile
+				nasm -f elf64 -o $@ $<
 
 hankaku.bin: hankaku.txt
 				../tools/makefont.py -o $@ $<
