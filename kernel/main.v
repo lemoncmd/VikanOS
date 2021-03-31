@@ -18,13 +18,14 @@ fn kernel_main(frame_buffer_config &graphic.FrameBufferConfig) {
 			frame_buffer_config.write_pixel(x, y, Color{255, 255, 255})
 		}
 	}
+	for x in 0..50 {
+		frame_buffer_config.write_ascii(x * 8, 50, `A` + x, Color{0, 0, 0})
+	}
 	for x in 0..200 {
 		for y in 0..100 {
 			frame_buffer_config.write_pixel(100 + x, 100 + y, Color{0, 255, 0})
 		}
 	}
-	frame_buffer_config.write_ascii(50, 50, `A`, Color{0, 0, 0})
-	frame_buffer_config.write_ascii(58, 50, `A`, Color{0, 0, 0})
 	halt()
 	println('hoge')
 }

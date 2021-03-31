@@ -1,29 +1,23 @@
 module graphic
 
-const font_a = [
-	0b00000000,
-	0b00011000,
-	0b00011000,
-	0b00011000,
-	0b00011000,
-	0b00100100,
-	0b00100100,
-	0b00100100,
-	0b00100100,
-	0b01111110,
-	0b01000010,
-	0b01000010,
-	0b01000010,
-	0b11100111,
-	0b00000000,
-	0b00000000,
-]
+#include "graphic/font.h"
+
+fn get_font(c rune) byteptr {
+	index := 16 * u32(c)
+	if index >= u32(&C._binary_hankaku_bin_size) {
+		return byteptr(0)
+	}
+	return unsafe { &C._binary_hankaku_bin_start + index }
+}
 
 pub fn (config &FrameBufferConfig) write_ascii(x int, y int, c rune, color &PixelColor) {
-	if c != `A` { return }
+	font := get_font(c)
+	if font == byteptr(0) {
+		return
+	}
 	for dy in 0..16 {
 		for dx in 0..8 {
-			if (font_a[dy] << dx) & 0x80 != 0 {
+			if (unsafe { font[dy] } << dx) & 0x80 != 0 {
 				config.write_pixel(x + dx, y + dy, color)
 			}
 		}

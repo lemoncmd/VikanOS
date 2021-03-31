@@ -1,5 +1,5 @@
 TARGET = kernel.elf
-OBJS = main.o entry.o newlib_support.o
+OBJS = main.o entry.o newlib_support.o hankaku.o
 
 CFLAGS += -O2 -Wall -g --target=x86_64-elf -ffreestanding -mno-red-zone
 LDFLAGS += --entry KernelMain -z norelro --image-base 0x100000 --static
@@ -11,6 +11,8 @@ all: $(TARGET)
 .PHONY: clean
 clean:
 				rm -rf *.o
+				rm *.bin
+				rm *.elf
 
 kernel.elf: $(OBJS) Makefile
 				ld.lld $(LDFLAGS) -o kernel.elf $(OBJS) -lc
@@ -20,3 +22,9 @@ kernel.elf: $(OBJS) Makefile
 
 %.c: %.v Makefile
 				v -o $@ $<
+
+hankaku.bin: hankaku.txt
+				../tools/makefont.py -o $@ $<
+
+hankaku.o: hankaku.bin
+				objcopy -I binary -O elf64-x86-64 -B i386:x86-64 $< $@
