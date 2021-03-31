@@ -21,7 +21,7 @@ pub fn new_console(config &graphic.FrameBufferConfig,
 		config: config
 		fg_color: fg_color
 		bg_color: bg_color
-		buf: [25]string{init: ''}
+		buf: [25]string{init: '                                                                                 '}
 		cursor_row: 0
 		cursor_col: 0
 	}
@@ -51,7 +51,7 @@ pub fn (mut c Console) put_string(s string) {
 			c.new_line()
 		} else if c.cursor_col < c.cols - 1 {
 			c.config.write_ascii(8 * c.cursor_col, 16 * c.cursor_row, ch, c.fg_color)
-			c.buf[c.cursor_row] = '${c.buf[c.cursor_row]}$ch'
+			unsafe { byteptr(c.buf[c.cursor_row].str)[c.cursor_col] = ch }
 			c.cursor_col++
 		}
 	}

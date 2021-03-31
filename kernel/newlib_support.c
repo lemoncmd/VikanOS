@@ -26,7 +26,18 @@ ssize_t read(int fd, void* buf, size_t count) {
   return -1;
 }
 
+void* main_console_ = 0;
+void (*main_console_handler_)();
+void register_console_print_handler(void* console, void (*handler)()) {
+  main_console_ = console;
+  main_console_handler_ = handler;
+}
+
 ssize_t write(int fd, const void* buf, ssize_t count) {
+  if (fd == 1 && main_console_ != 0) {
+    main_console_handler_(main_console_, buf);
+    return count;
+  }
   errno = EBADF;
   return -1;
 }

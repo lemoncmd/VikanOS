@@ -1,6 +1,8 @@
 import graphic
 import console
 
+#include "newlib_support.h"
+
 type Color = graphic.PixelColor
 
 [noreturn]
@@ -8,6 +10,12 @@ fn halt() {
 	for {
 		asm amd64 {hlt}
 	}
+}
+
+fn C.register_console_print_handler(&console.Console, fn(&console.Console, byteptr))
+
+fn console_print_handler(mut c console.Console, s byteptr) {
+	c.put_string(s.vstring())
 }
 
 fn kernel_main(frame_buffer_config &graphic.FrameBufferConfig) {
@@ -25,7 +33,11 @@ fn kernel_main(frame_buffer_config &graphic.FrameBufferConfig) {
 		}
 	}
 	mut cons := console.new_console(frame_buffer_config, Color{0, 0, 0}, Color{255, 255, 255})
-	cons.put_string('hogeeehoge')
+	C.register_console_print_handler(&cons, &console_print_handler)
+	println('hgoe')
+/*	cons.put_string('hogehgoeee')
+	println('auga')
+	println('hoge')*/
 	halt()
 	println('hoge')
 }
