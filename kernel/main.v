@@ -1,5 +1,6 @@
 import graphic
 import console
+import mm
 
 #include "newlib_support.h"
 
@@ -18,7 +19,8 @@ fn console_print_handler(mut c console.Console, s byteptr) {
 	c.put_string(s.vstring())
 }
 
-fn kernel_main(frame_buffer_config &graphic.FrameBufferConfig) {
+fn kernel_main(frame_buffer_config &graphic.FrameBufferConfig,
+	memory_map &mm.MemoryMap) {
 	if int(frame_buffer_config.pixel_format) !in [0, 1] {
 		halt()
 	}

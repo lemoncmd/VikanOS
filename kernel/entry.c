@@ -13,8 +13,18 @@ struct FrameBufferConfig {
   enum PixelFormat pixel_format;
 };
 
-void main__kernel_main(struct FrameBufferConfig* frame_buffer_config);
+struct MemoryMap {
+  unsigned long long buffer_size;
+  void* buffer;
+  unsigned long long map_size;
+  unsigned long long map_key;
+  unsigned long long descriptor_size;
+  uint32_t descriptor_version;
+};
 
-void KernelMain(struct FrameBufferConfig* frame_buffer_config) {
-  main__kernel_main(frame_buffer_config);
+void main__kernel_main(struct FrameBufferConfig* frame_buffer_config, struct MemoryMap* memory_map);
+
+void KernelMain(struct FrameBufferConfig* frame_buffer_config,
+    struct MemoryMap* memory_map) {
+  main__kernel_main(frame_buffer_config, memory_map);
 }
