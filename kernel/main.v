@@ -3,6 +3,9 @@ import console
 import mm
 
 #include "newlib_support.h"
+#include "asmfunc.h"
+fn C.SetCSSS(cs u16, ss u16)
+fn C.SetDSAll(value u16)
 
 type Color = graphic.PixelColor
 
@@ -38,6 +41,15 @@ fn kernel_main(frame_buffer_config_ref &graphic.FrameBufferConfig,
 	}
 	mut cons := console.new_console(frame_buffer_config, Color{0, 0, 0}, Color{255, 255, 255})
 	C.register_console_print_handler(&cons, &console_print_handler)
+
+	mut segment_settings := mm.SegmentSettings{}
+	segment_settings.setup_segments()
+
+	kernel_cs := 1 << 3
+	kernel_ss := 2 << 3
+	C.SetDSAll(0)
+	C.SetCSSS(kernel_cs, kernel_ss)
+
 	println('hgoe')
 /*	cons.put_string('hogehgoeee')
 	println('auga')
