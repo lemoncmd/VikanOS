@@ -24,10 +24,8 @@ fn console_print_handler(mut c console.Console, s byteptr) {
 
 fn kernel_main(frame_buffer_config_ref &graphic.FrameBufferConfig,
 	memory_map_ref &mm.MemoryMap) {
-	halt()
 	frame_buffer_config := *frame_buffer_config_ref
 	memory_map := *memory_map_ref
-	halt()
 	if int(frame_buffer_config.pixel_format) !in [0, 1] {
 		halt()
 	}

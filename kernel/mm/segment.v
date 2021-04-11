@@ -109,5 +109,5 @@ pub fn (mut s SegmentSettings) setup_segments() {
 	s.gdt[0] = 0
 	s.gdt[1] = set_code_segment(.execute_read, 0, 0, 0xfffff)
 	s.gdt[2] = set_data_segment(.read_write, 0, 0, 0xfffff)
-	C.LoadGDT(sizeof(s.gdt) - 1, &s.gdt[0])
+	C.LoadGDT(sizeof(s.gdt) - 1, u64(&s.gdt[0]))
 }
