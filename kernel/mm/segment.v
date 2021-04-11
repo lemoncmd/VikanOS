@@ -1,6 +1,18 @@
 module mm
 
 import bitfield
+struct LocalBitField{
+mut:
+	size int
+	field []u32
+}
+fn new_bitfield_from_array(size int, arr []u32) bitfield.BitField {
+	lbf := LocalBitField{
+		size: size,
+		field: arr
+	}
+	return *unsafe{&bitfield.BitField(&lbf)}
+}
 
 #include "asmfunc.h"
 fn C.LoadGDT(limit u16, offset u64)
@@ -40,7 +52,8 @@ struct SegmentDescriptorConfig {
 }
 
 fn segment_descriptor_factory(val u64, s SegmentDescriptorConfig) u64 {
-	mut output := bitfield.new(64)
+	arr := [u32(0), 0]
+	mut output := new_bitfield_from_array(64, arr)
 	output.insert_lowest_bits_first(0, 64, val)
 	if !s.is_data_segment {
 		output.insert_lowest_bits_first(0, 16, s.limit_low)
