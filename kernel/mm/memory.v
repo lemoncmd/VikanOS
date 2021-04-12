@@ -1,6 +1,7 @@
 module mm
 
 pub struct MemoryMap {
+pub:
 	buffer_size u64
 	buffer voidptr
 	map_size u64
@@ -10,6 +11,7 @@ pub struct MemoryMap {
 }
 
 struct MemoryDescriptor {
+pub:
 	memory_type u32
 	physical_start size_t
 	virtual_start size_t

@@ -25,9 +25,10 @@ struct MemoryMap {
 void main__kernel_main(struct FrameBufferConfig* frame_buffer_config, struct MemoryMap* memory_map);
 
 _Alignas(16) uint8_t kernel_main_stack[1024 * 1024];
-/*_Alignas(4096) uint64_t pml4_table[512];
+_Alignas(4096) uint64_t pml4_table[512];
 _Alignas(4096) uint64_t pdp_table[512];
-_Alignas(4096) uint64_t page_directory[64][512];*/
+_Alignas(4096) uint64_t page_directory[64][512];
+uint64_t memory_alloc_map[524288];
 
 void KernelMainNewStack(struct FrameBufferConfig* frame_buffer_config,
     struct MemoryMap* memory_map) {

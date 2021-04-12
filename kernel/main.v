@@ -19,7 +19,7 @@ fn halt() {
 fn C.register_console_print_handler(&console.Console, fn(&console.Console, byteptr))
 
 fn console_print_handler(mut c console.Console, s byteptr) {
-	c.put_string(s.vstring())
+	c.put_string(unsafe{s.vstring()})
 }
 
 fn kernel_main(frame_buffer_config_ref &graphic.FrameBufferConfig,
@@ -52,6 +52,31 @@ fn kernel_main(frame_buffer_config_ref &graphic.FrameBufferConfig,
 
 	mut paging_settings := mm.PagingSettings{}
 	paging_settings.setup_identity_page_table()
+
+	mut memory_manager := mm.BitmapMemoryManager{}
+	memory_manager.init()
+
+	memory_map_base := u64(memory_map.buffer)
+	mut available_end := u64(0)
+	for i := memory_map_base; i < memory_map_base + memory_map.map_size; i += memory_map.descriptor_size {
+		desc := &mm.MemoryDescriptor(voidptr(i))
+		if available_end < u64(desc.physical_start) {
+			memory_manager.mark_allocated(
+				mm.FrameID(size_t(available_end / 4096)),
+				(u64(desc.physical_start) - available_end) / 4096
+			)
+		}
+		physical_end := u64(desc.physical_start) + desc.number_of_pages * 4096
+		if mm.MemoryType(desc.memory_type).is_available() {
+			available_end = physical_end
+		} else {
+			memory_manager.mark_allocated(
+				mm.FrameID(desc.physical_start / size_t(4096)),
+				desc.number_of_pages * 4096 / 4096
+			)
+		}
+	}
+	memory_manager.set_memory_range(mm.FrameID(size_t(1)), mm.FrameID(size_t(available_end / 4096)))
 
 	println('hgoe')
 /*	cons.put_string('hogehgoeee')
