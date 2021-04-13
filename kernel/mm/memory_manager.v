@@ -17,6 +17,8 @@ mut:
 
 pub fn (mut b BitmapMemoryManager) init() {
 	b.alloc_map = &AllocMap(voidptr(&C.memory_alloc_map))
+	b.range_begin = FrameID(size_t(0))
+	b.range_end = FrameID(size_t(33554432))
 }
 
 fn (b BitmapMemoryManager) get_bit(frame FrameID) bool {
@@ -73,4 +75,19 @@ pub fn (mut b BitmapMemoryManager) free(start_frame FrameID, num_frames u64) {
 	for i in 0..num_frames {
 		b.set_bit(FrameID(size_t(start_frame) + size_t(i)), false)
 	}
+}
+
+pub fn (mut b BitmapMemoryManager) init_heap() ? {
+	heap_frames := u64(64 * 512)
+	heap_start := b.allocate(heap_frames) or {
+		return err
+	}
+
+	mut p_break := &u64(voidptr(&C.program_break))
+	mut p_break_end := &u64(voidptr(&C.program_break_end))
+	unsafe {
+		*p_break = u64(heap_start) * 4096
+		*p_break_end = u64(C.program_break) + heap_frames * 4096
+	}
+	return
 }

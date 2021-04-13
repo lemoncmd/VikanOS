@@ -65,11 +65,11 @@ fn segment_descriptor_factory(val u64, s SegmentDescriptorConfig) u64 {
 		output.insert_lowest_bits_first(47, 1, s.present)
 		output.insert_lowest_bits_first(48, 4, s.limit_high)
 		output.insert_lowest_bits_first(52, 1, s.available)
-		output.insert_lowest_bits_first(53, 1, s.long_mode)
 		output.insert_lowest_bits_first(55, 1, s.granularity)
+		output.insert_lowest_bits_first(56, 8, s.base_high)
 	}
+	output.insert_lowest_bits_first(53, 1, s.long_mode)
 	output.insert_lowest_bits_first(54, 1, s.default_operation_size)
-	output.insert_lowest_bits_first(56, 8, s.base_high)
 	return output.extract_lowest_bits_first(0, 64)
 }
 
@@ -82,7 +82,7 @@ fn set_code_segment(typ DescriptorType, descriptor_privilege_level u32, base u32
 		base_high: (base >> 24) & 0xff,
 
 		limit_low: limit & 0xffff,
-		limit_high: (limit >> 16) & 0xffff,
+		limit_high: (limit >> 16) & 0xf,
 
 		typ: typ,
 		system_segment: 1,

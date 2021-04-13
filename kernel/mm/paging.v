@@ -15,9 +15,9 @@ mut:
 }
 
 pub fn (mut p PagingSettings) setup_identity_page_table() {
-	p.pml4_table = voidptr(C.pml4_table)
-	p.pdp_table = voidptr(C.pdp_table)
-	p.page_directory = voidptr(C.page_directory)
+	p.pml4_table = voidptr(&C.pml4_table)
+	p.pdp_table = voidptr(&C.pdp_table)
+	p.page_directory = voidptr(&C.page_directory)
 	(*p.pml4_table)[0] = u64(&(*p.pdp_table)[0]) | 0x003
 	for i_pdpt in 0..64 {
 		(*p.pdp_table)[i_pdpt] = u64(&(*p.page_directory)[i_pdpt]) | 0x003

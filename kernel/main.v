@@ -77,7 +77,11 @@ fn kernel_main(frame_buffer_config_ref &graphic.FrameBufferConfig,
 		}
 	}
 	memory_manager.set_memory_range(mm.FrameID(size_t(1)), mm.FrameID(size_t(available_end / 4096)))
+	if available_end / 4096 > 0 { println('hooo') }
 
+	memory_manager.init_heap() or {
+		halt()
+	}
 	println('hgoe')
 /*	cons.put_string('hogehgoeee')
 	println('auga')
