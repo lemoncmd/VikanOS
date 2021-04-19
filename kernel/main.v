@@ -1,6 +1,7 @@
 import graphic
 import console
 import mm
+import usb
 
 #include "newlib_support.h"
 #include "asmfunc.h"
@@ -77,12 +78,13 @@ fn kernel_main(frame_buffer_config_ref &graphic.FrameBufferConfig,
 		}
 	}
 	memory_manager.set_memory_range(mm.FrameID(size_t(1)), mm.FrameID(size_t(available_end / 4096)))
-	if available_end / 4096 > 0 { println('hooo') }
 
 	memory_manager.init_heap() or {
 		halt()
 	}
-	println('hgoe')
+	for i in 0..5 {
+		println('hoge$i')
+	}
 /*	cons.put_string('hogehgoeee')
 	println('auga')
 	println('hoge')*/
